@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+
+title {
+  background-color: aqua;
+}
+
+@tailwind utilities;
