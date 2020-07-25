@@ -1,41 +1,26 @@
-import Head from "next/head";
-import Layout, { siteTitle } from "../components/layout";
-import utilStyles from "../styles/utils.module.css";
-import { getSortedPostsData } from "../lib/posts";
 import Link from "next/link";
-import Date from "../components/date";
-export default function Home({ allPostsData }) {
+import { frontMatter as introData } from "./docs/intro.mdx";
+import { frontMatter as advancedData } from "./docs/advanced.mdx";
+
+export default function DocsPage() {
+  const docsPages = [introData, advancedData];
+
   return (
-    <Layout home>
-      <Head>
-        <title>{siteTitle}</title>
-      </Head>
-      <div className="bg-red-400 text-3xl">Jorge Fuentes</div>
-      <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
-        <h2 className={utilStyles.headingLg}>Blog</h2>
-        <ul className={utilStyles.list}>
-          {allPostsData.map(({ id, date, title }) => (
-            <li className={utilStyles.listItem} key={id}>
-              <Link href="/posts/[id]" as={`/posts/${id}`}>
-                <a>{title}</a>
-              </Link>
-              <br />
-              <small className={utilStyles.lightText}>
-                <Date dateString={date} />
-              </small>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </Layout>
+    <>
+      <h1>Docs Index</h1>
+      <ul>
+        {docsPages.map((page) => (
+          <li key={page.__resourcePath}>
+            <Link href={formatPath(page.__resourcePath)}>
+              <a>{page.title}</a>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
 
-export async function getStaticProps() {
-  const allPostsData = getSortedPostsData();
-  return {
-    props: {
-      allPostsData,
-    },
-  };
+function formatPath(p) {
+  return p.replace(/\.mdx$/, "");
 }
