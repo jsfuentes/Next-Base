@@ -14,7 +14,6 @@ export default function Home({ allPostsData }) {
       <Head>
         <title>{siteTitle}</title>
       </Head>
-      <div className="bg-red-400 text-3xl">Jorge Fuentes</div>
       <section className="w-full h-full flex flex-col items-center justify-center">
         <h2 className="text-3xl font-bold">Blog</h2>
         <ul>
