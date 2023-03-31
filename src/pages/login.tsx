@@ -3,10 +3,14 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { axios } from "src/api/axios";
 import Button from "src/components/Button";
-import { TelephoneInput, TextInput } from "src/components/Inputs";
+import GoogleButton from "src/components/GoogleButton";
+import { TextInput } from "src/components/Inputs";
 import Logo from "src/components/Logo";
 import UserContext from "src/contexts/UserContext";
+import { useAppDispatch } from "src/redux/hooks";
+import { logErrorMessage } from "src/redux/notification";
 const debug = require("debug")("app:pages:Login");
 
 //Can set "route" and "msg" with query params
@@ -19,11 +23,22 @@ export default function Login() {
     formState: { errors },
   } = useForm<UserForm>();
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
-  const onSubmit = (data: UserForm) => {
+  const onSubmit = async (data: UserForm) => {
     console.log(data);
 
-    alert("Successfully submitted form");
+    try {
+      const resp = await axios.post("/users/login", data);
+
+      console.log("RESP", resp);
+      if (resp.data.access_token) {
+        router.push("/onboarding");
+      }
+    } catch (err) {
+      console.error(err);
+      dispatch(logErrorMessage("Invalid email or password"));
+    }
 
     // toast("Successfully submitted form");
   };
@@ -63,18 +78,6 @@ export default function Login() {
                 pattern={/^\S+@\S+$/i}
               />
 
-              <div className="w-full text-center text-xl font-medium">OR</div>
-
-              <TelephoneInput
-                className="mt-2"
-                control={control}
-                errors={errors}
-                name="phone"
-                title="Cell Number"
-              />
-
-              <div className="w-3/4 bg-gray-500 h-px my-8 mx-auto" />
-
               <TextInput
                 className="mt-8 mb-4"
                 name="password"
@@ -84,20 +87,37 @@ export default function Login() {
                 required
                 type="password"
               />
+              <div className="font-medium mt-2 text-sm text-gray-500 cursor-pointer hover:text-gray-700">
+                Forgot Password?
+              </div>
 
               <div className="flex flex-col justify-center items-center mt-8 mx-auto w-full">
                 {/*  eslint-disable-next-line react/no-unescaped-entities */}
-                <Button type="submit" size="lg" className="px-14">
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="px-14"
+                  variant="reverse-primary"
+                >
                   Let's Go
                 </Button>
-                <div className="font-medium mt-2 text-gray-500 cursor-pointer hover:text-gray-700">
-                  Forgot Password?
+
+                <div className="flex flex-row justify-between items-center w-full my-4">
+                  <div className="h-px bg-gray-400 flex-1 mr-3" />
+
+                  <div className="text-center text-xl text-gray-400">or</div>
+                  <div className="h-px bg-gray-400 flex-1 ml-3" />
                 </div>
+
+                <GoogleButton onSuccess={() => router.push("/dashboard")} />
+              </div>
+
+              <div className="flex flex-col justify-center items-center mt-4 mx-auto w-full">
                 <div
-                  className="font-medium text-gray-500 cursor-pointer hover:text-gray-700"
+                  className="font-medium text-gray-500 cursor-pointer hover:text-gray-700 text-sm"
                   onClick={() => router.push("/signup")}
                 >
-                  Don't have an account? Signup
+                  Don't have an account? Sign up
                 </div>
               </div>
             </form>

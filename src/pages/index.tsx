@@ -2,7 +2,8 @@ import conf from "conf";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { axios } from "src/api/axios";
 import Button from "src/components/Button";
 import Footer from "src/components/Footer";
 import Navbar from "src/components/Navbar";
@@ -16,17 +17,17 @@ export default function Landing() {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   axios
-  //     .get("/api")
-  //     .then((response) => {
-  //       debug("Landing Page response", response);
-  //       setResp(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get("/api/users/1")
+      .then((response: any) => {
+        console.log("Landing Page response", response.data);
+        setResp(response.data);
+      })
+      .catch((error: any) => {
+        console.error(error);
+      });
+  }, []);
 
   // const goToNewBoard = useCallback(async () => {
   //   if (!user?.id) {

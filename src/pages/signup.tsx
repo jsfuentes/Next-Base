@@ -4,13 +4,8 @@ import { useRouter } from "next/router";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import Button from "src/components/Button";
-import {
-  CheckboxInput,
-  NumberInput,
-  SelectInput,
-  TelephoneInput,
-  TextInput,
-} from "src/components/Inputs";
+import GoogleButton from "src/components/GoogleButton";
+import { TextInput } from "src/components/Inputs";
 import Logo from "src/components/Logo";
 import UserContext from "src/contexts/UserContext";
 const debug = require("debug")("app:pages:Login");
@@ -56,16 +51,14 @@ export default function Login() {
             <div className="font-medium text-2xl mb-4">
               Receive Bitcoin Just For Signing Up!
             </div>
+            <div className="flex flex-col justify-between items-center w-full mt-8 mb-4">
+              <GoogleButton onSuccess={() => router.push("/onboarding")} />
+
+              <div className="h-px bg-gray-400 flex-1 mr-3 mt-4" />
+              <div className="text-center text-xl text-gray-400">or</div>
+              <div className="h-px bg-gray-400 flex-1 ml-3" />
+            </div>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <TextInput
-                className="my-4"
-                name="name"
-                title="First Name"
-                register={register}
-                errors={errors}
-                required
-                maxLength={80}
-              />
               <TextInput
                 className="my-4"
                 name="email"
@@ -75,89 +68,9 @@ export default function Login() {
                 required
                 pattern={/^\S+@\S+$/i}
               />
-              <TextInput
-                className="my-4"
-                name="password"
-                title="Password"
-                register={register}
-                errors={errors}
-                required
-                type="password"
-              />
-              <TextInput
-                className="my-4"
-                name="password_confirmation"
-                title="Confirm Password"
-                register={register}
-                errors={errors}
-                required
-                type="password"
-                validate={(value) => {
-                  const { password } = getValues();
-                  debug("TEST", password, value, password === value);
-                  return password === value || "Passwords should match!";
-                }}
-              />
-              <TelephoneInput
-                className="my-4"
-                control={control}
-                errors={errors}
-                name="phone"
-                title="Cell Number"
-              />
-              <NumberInput
-                className="my-4"
-                min={1000}
-                max={9999}
-                name="ssn"
-                title="Last 4 Digits of Your Social Security Number"
-                register={register}
-                errors={errors}
-                required
-              />
-              <SelectInput
-                className="my-4"
-                title="Grade"
-                register={register}
-                errors={errors}
-                name="grade"
-                options={[
-                  { label: "1st", value: "1st" },
-                  { label: "2nd", value: "2nd" },
-                  { label: "3rd", value: "3rd" },
-                  { label: "4th", value: "4th" },
-                  { label: "5th", value: "5th" },
-                  { label: "6th", value: "6th" },
-                  { label: "7th", value: "7th" },
-                  { label: "8th", value: "8th" },
-                  { label: "9th", value: "9th" },
-                  { label: "10th", value: "10th" },
-                  { label: "11th", value: "11th" },
-                  { label: "12th", value: "12th" },
-                ]}
-                required
-              />
-              <NumberInput
-                className="my-4"
-                min={10000}
-                max={99999}
-                name="school_code"
-                title="5-Digit School Code"
-                register={register}
-                errors={errors}
-                required
-              />
-
-              <CheckboxInput
-                className="my-4"
-                register={register}
-                title="Signup for Newsletter"
-                name="newsletter"
-              />
-
               <div className="flex flex-col justify-center items-center mt-8 mx-auto w-full">
                 <Button type="submit" size="lg" className="px-14">
-                  Submit
+                  Sign Up
                 </Button>
                 <div
                   className="font-medium mt-2 text-gray-500 cursor-pointer hover:text-gray-700"
@@ -173,3 +86,106 @@ export default function Login() {
     </div>
   );
 }
+
+// function OldForm() {
+//   return (
+//     <>
+//       <TextInput
+//         className="my-4"
+//         name="name"
+//         title="First Name"
+//         register={register}
+//         errors={errors}
+//         required
+//         maxLength={80}
+//       />
+//       <TextInput
+//         className="my-4"
+//         name="email"
+//         title="Email"
+//         register={register}
+//         errors={errors}
+//         required
+//         pattern={/^\S+@\S+$/i}
+//       />
+//       <TextInput
+//         className="my-4"
+//         name="password"
+//         title="Password"
+//         register={register}
+//         errors={errors}
+//         required
+//         type="password"
+//       />
+//       <TextInput
+//         className="my-4"
+//         name="password_confirmation"
+//         title="Confirm Password"
+//         register={register}
+//         errors={errors}
+//         required
+//         type="password"
+//         validate={(value) => {
+//           const { password } = getValues();
+//           debug("TEST", password, value, password === value);
+//           return password === value || "Passwords should match!";
+//         }}
+//       />
+//       <TelephoneInput
+//         className="my-4"
+//         control={control}
+//         errors={errors}
+//         name="phone"
+//         title="Cell Number"
+//       />
+//       <NumberInput
+//         className="my-4"
+//         min={1000}
+//         max={9999}
+//         name="ssn"
+//         title="Last 4 Digits of Your Social Security Number"
+//         register={register}
+//         errors={errors}
+//         required
+//       />
+//       <SelectInput
+//         className="my-4"
+//         title="Grade"
+//         register={register}
+//         errors={errors}
+//         name="grade"
+//         options={[
+//           { label: "1st", value: "1st" },
+//           { label: "2nd", value: "2nd" },
+//           { label: "3rd", value: "3rd" },
+//           { label: "4th", value: "4th" },
+//           { label: "5th", value: "5th" },
+//           { label: "6th", value: "6th" },
+//           { label: "7th", value: "7th" },
+//           { label: "8th", value: "8th" },
+//           { label: "9th", value: "9th" },
+//           { label: "10th", value: "10th" },
+//           { label: "11th", value: "11th" },
+//           { label: "12th", value: "12th" },
+//         ]}
+//         required
+//       />
+//       <NumberInput
+//         className="my-4"
+//         min={10000}
+//         max={99999}
+//         name="school_code"
+//         title="5-Digit School Code"
+//         register={register}
+//         errors={errors}
+//         required
+//       />
+//       {/* <CheckboxInput
+// className="my-4"
+// register={register}
+// title="Signup for Newsletter"
+// name="newsletter"
+// /> */}{" "}
+//     </>
+//   );
+// }

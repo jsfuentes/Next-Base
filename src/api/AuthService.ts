@@ -3,20 +3,29 @@ import { logAxiosError } from "src/redux/notification";
 import { store } from "src/redux/store";
 
 const AuthService = {
+  googleLogin,
   onAuth,
   guessMe,
 };
 
 export default AuthService;
 
-interface GuessMeResponse {
-  data: User;
+async function googleLogin(token: string) {
+  try {
+    const resp = await axios.post<User>("/api/users/google_login", {
+      token,
+    });
+    return resp.data;
+  } catch (err: any) {
+    store.dispatch(logAxiosError(err, "Creating Google user"));
+    throw err;
+  }
 }
 
 async function guessMe(user: Pick<User, "id" | "type">) {
   try {
-    const resp = await axios.post<GuessMeResponse>("/api/users/me", { user });
-    return resp.data.data;
+    const resp = await axios.post<User>("/api/users/me", { user });
+    return resp.data;
   } catch (err: any) {
     store.dispatch(logAxiosError(err, "Fetching user session"));
     throw err;

@@ -2,6 +2,7 @@ import * as Sentry from "@sentry/react";
 import { nanoid } from "nanoid";
 import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import AuthService from "src/api/AuthService";
 import { axios } from "src/api/axios";
 import UserContext from "src/contexts/UserContext";
 const debug = require("debug")("app:UserProvider");
@@ -19,7 +20,7 @@ export default function UserProvider(props: UserProviderProps) {
   //Priority cookie, storage, random id
   const getCreateUser = useCallback(async () => {
     //1 Client guesses identity
-    let clientUserGuess;
+    let clientUserGuess: User;
     const uid = localStorage.getItem(LOCAL_STORAGE_UID_KEY);
     if (uid) {
       clientUserGuess = { id: uid, type: "anon" };
@@ -29,8 +30,13 @@ export default function UserProvider(props: UserProviderProps) {
 
     //2 Server assigns identity and sets session
     try {
-      // const newUser = await AuthService.guessMe(clientUserGuess);
-      const newUser: User = { id: "5f9f1b0b0b9b0b0004e1b0b0b", type: "anon" };
+      //TODO: Make this work correctly
+      const newUser = await AuthService.guessMe(clientUserGuess);
+      debug("Server user: ", newUser);
+      if (!newUser) {
+        return clientUserGuess;
+      }
+
       return newUser;
     } catch (err) {
       return null;
@@ -109,6 +115,8 @@ export default function UserProvider(props: UserProviderProps) {
       localStorage.setItem(LOCAL_STORAGE_UID_KEY, user.id);
     }
   }, [user]);
+
+  if (userLoading) return null;
 
   return (
     <UserContext.Provider

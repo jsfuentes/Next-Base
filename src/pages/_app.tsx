@@ -1,12 +1,16 @@
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import conf from "conf";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
-// import ErrorBoundary from "src/components/ErrorBoundary";
+import "react-toastify/dist/ReactToastify.min.css";
+import ErrorBoundary from "src/components/ErrorBoundary";
 import ErrorManager from "src/components/ErrorManager";
-// import UserProvider from "src/contexts/UserProvider";
+import UserProvider from "src/contexts/UserProvider";
 import { store } from "src/redux/store";
 import "src/styles/globals.css";
 
+const debug = require("debug")("app:pages:_app");
 // const IS_SENTRY_ACTIVE =
 //   conf.has("SENTRY_DNS") && conf.get("SENTRY_DNS") !== "";
 
@@ -60,27 +64,37 @@ import "src/styles/globals.css";
 //   }
 // }
 
-export default function App({ Component, pageProps }: AppProps) {
-  return (
-    // <ErrorBoundary>
-    <Provider store={store}>
-      {/* <UserProvider> */}
-      <ErrorManager>
-        <ToastContainer
-          bodyClassName="px-2 text-white font-medium w-full relative min-w-full "
-          toastClassName="py-3 rounded bg-gray-900 flex items-center justify-center min-h-0 shadow-md " //disable default min height
-          closeButton={false}
-          position={toast.POSITION.TOP_CENTER}
-          autoClose={7500} //false to disable
-          closeOnClick={true}
-          pauseOnHover={true}
-          pauseOnFocusLoss={false}
-        />
+if (typeof localStorage !== "undefined") {
+  setTimeout(() => {
+    console.log("Debugging enabledd");
+    localStorage.debug = "app:*";
+  }, 3000);
+}
 
-        <Component {...pageProps} />
-      </ErrorManager>
-      {/* </UserProvider> */}
-    </Provider>
-    // </ErrorBoundary>
+export default function App({ Component, pageProps }: AppProps) {
+  debug("GCLIENT", conf.get("GOOGLE_CLIENT_ID"));
+  return (
+    <ErrorBoundary>
+      <Provider store={store}>
+        <UserProvider>
+          <GoogleOAuthProvider clientId={conf.get("GOOGLE_CLIENT_ID")}>
+            <ErrorManager>
+              <ToastContainer
+                bodyClassName="px-2 text-white font-medium w-full relative min-w-full "
+                toastClassName="py-3 rounded bg-gray-900 flex items-center justify-center min-h-0 shadow-md " //disable default min height
+                closeButton={false}
+                position={toast.POSITION.TOP_CENTER}
+                autoClose={4000} //false to disable
+                closeOnClick={true}
+                pauseOnHover={true}
+                pauseOnFocusLoss={false}
+              />
+
+              <Component {...pageProps} />
+            </ErrorManager>
+          </GoogleOAuthProvider>
+        </UserProvider>
+      </Provider>
+    </ErrorBoundary>
   );
 }

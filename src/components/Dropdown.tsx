@@ -50,7 +50,7 @@ export default function Dropdown(props: DropdownProps) {
   return (
     <div
       className={classNames({
-        "relative text-left": true,
+        relative: true,
         [props.outerCls || ""]: props.outerCls,
       })}
       {...(props.type === "hover"
@@ -87,7 +87,7 @@ export default function Dropdown(props: DropdownProps) {
       )}
       <div
         className={classNames({
-          "w-full h-full": true,
+          "w-full h-full flex items-end justify-end": true,
           [props.otherCls || ""]: props.otherCls,
         })}
         {...(props.type === "click"
@@ -127,7 +127,7 @@ export function MenuItem(props: MenuItemProps) {
         : {})}
       {...(props.newTab ? { target: "_blank", rel: "noreferrer" } : {})}
       {...(props.href ? { href: props.href } : {})}
-      className="font-medium w-full py-0.5 flex items-center px-2.5 cursor-pointer  hover:bg-primary-100 hover:text-primary-500 transition duration-200 ease-in-out"
+      className="font-medium w-full py-0.5 flex items-center px-2.5 cursor-pointer hover:bg-primary-100 hover:text-primary-500 transition duration-200 ease-in-out"
     >
       {props.icon && <i className={`${props.icon} mr-2.5 text-lg`} />}
       {props.children}
