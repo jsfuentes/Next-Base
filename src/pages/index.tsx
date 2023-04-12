@@ -29,20 +29,6 @@ export default function Landing() {
       });
   }, []);
 
-  // const goToNewBoard = useCallback(async () => {
-  //   if (!user?.id) {
-  //     dispatch(logErrorMessage("You need to be logged in to create a board"));
-  //     return;
-  //   }
-
-  //   try {
-  //     const board = await BoardService.createDefaultBoard(user?.id);
-  //     navigate(`/b/${board.id}`);
-  //   } catch (err) {
-  //     debug("Go to board on dashboard failed");
-  //   }
-  // }, [dispatch, navigate, user?.id]);
-
   return (
     <>
       <Head>

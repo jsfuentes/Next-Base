@@ -116,8 +116,6 @@ export default function UserProvider(props: UserProviderProps) {
     }
   }, [user]);
 
-  if (userLoading) return null;
-
   return (
     <UserContext.Provider
       value={{

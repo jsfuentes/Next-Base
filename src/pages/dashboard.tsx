@@ -14,7 +14,6 @@ const debug = require("debug")("app:Dashboard");
 export default function Dashboard() {
   const { user } = useContext(UserContext);
   const [modules, setModules] = useState<Array<Module>>([]);
-  const [resp, setResp] = useState("");
   const dispatch = useAppDispatch();
   const router = useRouter();
 
